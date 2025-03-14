@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Music, User, PlayCircle } from 'lucide-react';
 import './App.css'; // CRA uses this for styles (we’ll handle Tailwind next)
+declare var process: { env: { [key: string]: string } };
 
 interface Track {
   id: string;
@@ -22,7 +23,7 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get('authEndpoint');
+      const response = await axios.get(authEndpoint);
       window.location.href = response.data.auth_url;
     } catch (error) {
       console.error('Login error:', error);
@@ -34,7 +35,7 @@ function App() {
       const token = localStorage.getItem('spotify_token');
       if (!token) return;
 
-      const response = await axios.get('${apiEndpoint}/top-tracks', {
+      const response = await axios.get(`${apiEndpoint}/top-tracks`, {
         headers: { Authorization: token }
       });
       setTopTracks(response.data.items);
