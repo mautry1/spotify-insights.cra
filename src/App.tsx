@@ -13,13 +13,16 @@ interface Track {
   };
 }
 
+const authEndpoint = process.env.REACT_APP_AUTH_ENDPOINT;
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [topTracks, setTopTracks] = useState<Track[]>([]);
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/login');
+      const response = await axios.get('authEndpoint');
       window.location.href = response.data.auth_url;
     } catch (error) {
       console.error('Login error:', error);
@@ -31,7 +34,7 @@ function App() {
       const token = localStorage.getItem('spotify_token');
       if (!token) return;
 
-      const response = await axios.get('http://localhost:5000/api/user/top-tracks', {
+      const response = await axios.get('${apiEndpoint}/top-tracks', {
         headers: { Authorization: token }
       });
       setTopTracks(response.data.items);
